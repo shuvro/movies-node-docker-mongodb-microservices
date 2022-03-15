@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./movie-service
+        working-directory: ./movie-service/
 
     strategy:
       matrix:
@@ -28,5 +28,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        cache-dependency-path: './movie-service/package-lock.json'
     - run: npm ci
     - run: npm test
