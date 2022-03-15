@@ -1,14 +1,53 @@
-version: "3.2"
+version: "3.6"
 services:
-  app:
+  auth-service:
     command: node src/server.js
+    container_name: auth-service
     build:
-      context: .
+      context: ./auth-service
       dockerfile: Dockerfile
     ports:
-      - published: ${APP_PORT:-3000}
-        target: 3000
+      - "3000:3000"
     volumes:
-      - .:/app/
+      - ./auth-service/:/app
+      - auth_node_moduels:/app/node_modules/
+    env_file:
+      - ./auth-service/.env
+  movie-service:
+    command: npm run dev
+    container_name: movie-service
+    build:
+      context: ./movie-service
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./movie-service/:/app
+      - movie_node_moduels:/app/node_modules/
+    env_file:
+      - ./movie-service/.env
+    depends_on:
+      - mongo-db
+      - auth-service
+  mongo-db:
+    image: mongo:latest
+    container_name: mongo-netguru
+    restart: unless-stopped
+    ports:
+      - "27018:27017"
+    env_file:
+      - .env
     environment:
-      JWT_SECRET: ${JWT_SECRET}
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=1234
+      - MONGO_INITDB_DATABASE=movies
+    volumes:
+      - mongodb_data_container:/data/db
+      - mongodb_config:/data/configdb
+      - ./movie-service/docker-mongo-script/:/docker-entrypoint-initdb.d
+
+volumes:
+  mongodb_data_container:
+  auth_node_moduels:
+  movie_node_moduels:
+  mongodb_config:
