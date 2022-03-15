@@ -14,11 +14,11 @@ You need to have `docker` and `docker-compose` installed on your computer to run
 docker-compose up -d
 ```
 
-By default the
+## Services at PORTS
 
-auth service will start on port `3000`
-movie service will start on port `3001`
-mongodb will start on port `27018`
+- auth service will start on port `3000`
+- movie service will start on port `3001`
+- mongodb will start on port `27018`
 
 To stop the service run
 
