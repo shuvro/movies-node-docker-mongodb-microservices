@@ -4,10 +4,13 @@ const dotenv = require('dotenv');
 const {create, get} = require("../controllers/movie");
 const {authenticateToken} = require("../middleware/auth");
 const movieRoutes = require('../routes/movies')
-    require('../config/db')
 
 // get config vars
 dotenv.config();
+
+if (process.env.NODE_ENV !== 'test') {
+    require('../config/db')
+}
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
